@@ -38,6 +38,8 @@ function output = ES(fitness,lb,ub,mu,lambda,max_evals,crossoverProb,mutProb)
 					child = child + .5*normrnd(0,1);
                 end
             else
+            % If the children doesn't crossover then make it them equal as
+            % the first parent
                 child = P(indices(1), :);
                 % Wanna mutate?
 				if rand(1) <= mutProb
@@ -49,22 +51,20 @@ function output = ES(fitness,lb,ub,mu,lambda,max_evals,crossoverProb,mutProb)
         end
         %Agarrar los mejores P
 		total = [P; children];
-        %[rows,col] = size(children)
         [rows,~] = size(total);
         fitnessCalc = [];
+        % THe fitness function isn't vectorized
         for row = 1 : rows       
             fitnessCalc = [fitnessCalc ; [fitness(total(row,:)) row]];
         end
-        fitnessCalc
+        % Sort the values by the first column (fitness value)
         sortedFitness = sortrows(fitnessCalc);
+        % Get the first mu rows
         totalaux = sortedFitness(1:mu, :);
         
         for j = 1:mu
             P(j,:) = total(ceil(totalaux(j,2)),:);
         end
-        
-        P
-		% total = [total fitnessCalc'];
 
 	end
 	
